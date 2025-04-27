@@ -1,11 +1,6 @@
 FROM tensorflow/tensorflow:latest-gpu
 
 
-# Temporary
-ARG GID=3333
-ARG UID=$GID
-
-
 # If the steps of a `Dockerfile` use files that are different from the `context` file, COPY the
 # file of each step separately; and RUN the file immediately after COPY
 WORKDIR /app
