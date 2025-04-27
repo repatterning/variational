@@ -62,7 +62,16 @@ Get the name of the running instance of ``posteriors`` via:
 docker ps --all
 ```
 
-Never deploy a root container.
+Never deploy a root container.  **Remember**, during the development phase the container is a root container
+
+
+> *... which can cause new files in mounted volumes to be created as the root user on your host machine.  To avoid this, run the container by specifying your user's userid:*
+>
+> $ docker run -u $(id -u):$(id -g) args...
+>
+
+
+
 
 <br>
 <br>
