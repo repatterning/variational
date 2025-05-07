@@ -1,4 +1,6 @@
 """Module interface.py"""
+import typing
+
 import pandas as pd
 
 import src.assets.gauges
@@ -13,16 +15,16 @@ class Interface:
     Notes<br>
     ------<br>
 
-    Reads-in the data in focus.
+    Reads-in the assets.
     """
 
     def __init__(self, service: sr.Service, s3_parameters: s3p.S3Parameters, arguments: dict):
         """
 
-        :param service:
-        :param s3_parameters: The overarching S3 parameters settings of this project, e.g., region code
-                              name, buckets, etc.
-        :param arguments:
+        :param service: A suite of services for interacting with Amazon Web Services.
+        :param s3_parameters: The overarching S3 parameters settings of this
+                              project, e.g., region code name, buckets, etc.
+        :param arguments: A set of arguments vis-à-vis calculation & storage objectives.
         """
 
         self.__service = service
@@ -33,7 +35,7 @@ class Interface:
     def __structure(partitions: pd.DataFrame) -> list[pr.Partitions]:
         """
 
-        :param partitions:
+        :param partitions: The time series partitions.
         :return:
         """
 
@@ -41,16 +43,18 @@ class Interface:
 
         return [pr.Partitions(**value) for value in values]
 
-    def exc(self) -> list[pr.Partitions]:
+    def exc(self) -> typing.Tuple[list[pr.Partitions], pd.DataFrame]:
         """
 
         :return:
         """
 
         # Applicable time series metadata, i.e., gauge, identification codes
-        gauges = src.assets.gauges.Gauges(service=self.__service, s3_parameters=self.__s3_parameters).exc()
+        gauges = src.assets.gauges.Gauges(
+            service=self.__service, s3_parameters=self.__s3_parameters, arguments=self.__arguments).exc()
 
-        # Strings for data reading.
-        partitions = src.assets.partitions.Partitions(data=gauges, arguments=self.__arguments).exc()
+        # Strings for data reading.  If self.__arguments.get('reacquire') is False, the partitions will be those
+        # of excerpt ...
+        partitions, listings = src.assets.partitions.Partitions(data=gauges, arguments=self.__arguments).exc()
 
-        return self.__structure(partitions=partitions)
+        return self.__structure(partitions=partitions), listings
