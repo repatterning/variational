@@ -20,3 +20,4 @@ class Config:
 
         # Template
         self.s3_parameters_key = 's3_parameters.yaml'
+        self.arguments_key = 'artefacts' + '/' + 'architecture' + '/' + 'variational' + '/' + 'arguments.json'
