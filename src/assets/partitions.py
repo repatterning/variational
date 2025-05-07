@@ -1,7 +1,8 @@
 """Module partitions.py"""
-import datetime
 import typing
-
+import logging
+import datetime
+import numpy as np
 import pandas as pd
 
 
@@ -20,9 +21,8 @@ class Partitions:
         self.__data = data
         self.__arguments = arguments
 
-    def __boundaries(self) -> typing.Tuple[datetime.datetime, datetime.datetime]:
+    def __limits(self):
         """
-        The boundaries of the dates; datetime format
 
         :return:
         """
@@ -35,30 +35,34 @@ class Partitions:
         _end = datetime.datetime.now().year
         ending = datetime.datetime.strptime(f'{_end}-01-01', '%Y-%m-%d')
 
-        return starting, ending
-
-    def __dates(self, starting: datetime.datetime, ending: datetime.datetime) -> pd.DataFrame:
-        """
-
-        :param starting:
-        :param ending:
-        :return:
-        """
-
         # Create series
-        frame = pd.date_range(start=starting, end=ending, freq=self.__arguments.get('catchments').get('frequency')
-                              ).to_frame(index=False, name='datestr')
+        limits = pd.date_range(start=starting, end=ending, freq='YS'
+                              ).to_frame(index=False, name='date')
 
-        return frame['datestr'].apply(lambda x: x.strftime('%Y-%m-%d')).to_frame()
+        return limits
 
-    def exc(self) -> pd.DataFrame:
+    def exc(self) -> typing.Tuple[pd.DataFrame, pd.DataFrame]:
         """
 
         :return:
         """
 
-        starting, ending = self.__boundaries()
-        dates = self.__dates(starting=starting, ending=ending)
-        frame = dates.merge(self.__data, how='left', on='datestr')
-        
-        return frame
+        # The years in focus, via the year start date, e.g., 2023-01-01
+        limits = self.__limits()
+        logging.info(limits)
+
+        # Focusing on ...
+        excerpt = self.__arguments.get('series').get('excerpt')
+        if excerpt is None:
+            data =  self.__data
+        else:
+            codes = np.unique(np.array(excerpt))
+            data = self.__data.copy().loc[self.__data['ts_id'].isin(codes), :]
+
+        # Hence, the data sets in focus vis-à-vis the years in focus
+        listings = limits.merge(data, how='left', on='date')
+
+        # ...
+        partitions = listings[['catchment_id', 'ts_id']].drop_duplicates()
+
+        return partitions, listings
