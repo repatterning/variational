@@ -8,7 +8,6 @@ import src.elements.s3_parameters as s3p
 import src.elements.service as sr
 import src.functions.directories
 import src.s3.bucket
-import src.s3.prefix
 
 
 class Setup:
@@ -34,30 +33,6 @@ class Setup:
         # Configurations
         self.__configurations = config.Config()
 
-        # An instance for interacting with objects within an Amazon S3 prefix
-        self.__pre = src.s3.prefix.Prefix(service=self.__service, bucket_name=self.__s3_parameters.internal)
-
-        self.__prefixes = ['', '']
-
-    def __clear_prefix(self) -> bool:
-        """
-
-        :return:
-        """
-
-        # Get the keys therein
-        states = []
-        for prefix in self.__prefixes:
-            keys: list[str] = self.__pre.objects(prefix=prefix)
-            if len(keys) > 0:
-                objects = [{'Key' : key} for key in keys]
-                state = self.__pre.delete(objects=objects)
-                states.append(bool(state))
-            else:
-                states.append(True)
-
-        return all(states)
-
     def __s3(self) -> bool:
         """
         Prepares an Amazon S3 (Simple Storage Service) bucket.
@@ -70,7 +45,7 @@ class Setup:
                                       bucket_name=self.__s3_parameters.internal)
 
         if bucket.exists():
-            return self.__clear_prefix()
+            return True
 
         return bucket.create()
 
@@ -93,4 +68,7 @@ class Setup:
         :return:
         """
 
-        return self.__s3() & self.__local()
+        if self.__s3() & self.__local():
+            return True
+
+        sys.exit('Error: Set up failure')
