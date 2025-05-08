@@ -1,4 +1,5 @@
 import collections
+import typing
 import numpy as np
 
 import tensorflow_probability.python.sts.components as tfc
@@ -36,21 +37,19 @@ class Architecture:
 
         return model
 
-    def __variational(self, model, _training: np.ndarray):
+    def __variational(self, model, _training: np.ndarray) -> typing.Tuple[tfu.DeferredModule, np.ndarray]:
         """
-        
+
         :param model:
         :param _training:
         :return:
         """
 
-        posterior: tfu.DeferredModule
-        posterior = tfp.sts.build_factored_surrogate_posterior(
+        posterior: tfu.DeferredModule = tfp.sts.build_factored_surrogate_posterior(
             model=model)
 
         # Evidence Lower Bound Loss Curve Data
-        elb: tfr.EagerTensor
-        elb = tfp.vi.fit_surrogate_posterior(
+        elb: tfr.EagerTensor = tfp.vi.fit_surrogate_posterior(
             target_log_prob_fn=model.joint_distribution(observed_time_series=_training).log_prob,
             surrogate_posterior=posterior,
             optimizer=tf_keras.optimizers.Adam(learning_rate=self.__arguments.get('learning_rate')),
@@ -61,7 +60,7 @@ class Architecture:
 
     def exc(self, master: mr.Master):
 
-        model = self.__model(_training=master.training['measure'].values)
+        model: tfc.Sum = self.__model(_training=master.training['measure'].values)
 
         v_posterior: tfu.DeferredModule
         v_elb: np.ndarray
