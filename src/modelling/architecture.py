@@ -1,8 +1,7 @@
-import tensorflow_probability as tfp
-
-import tf_keras
-
 import numpy as np
+import tensorflow_probability as tfp
+import tensorflow_probability.python.experimental.util as tfu
+import tf_keras
 
 import src.elements.master as mr
 
@@ -46,5 +45,7 @@ class Architecture:
     def exc(self, master: mr.Master):
 
         model = self.__model(_training=master.training['measure'].values)
+
+        v_posterior: tfu.DeferredModule
         v_posterior, v_elb = self.__variational(model=model, _training=master.training['measure'].values)
         v_posterior_samples = v_posterior.sample(self.__arguments.get('n_samples'))
