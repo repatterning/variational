@@ -22,7 +22,7 @@ class Predicting:
 
         self.__arguments = arguments
 
-    def __times(self, start: pd.Timestamp, periods: int):
+    def __times(self, start: pd.Timestamp, periods: int) -> pd.DatetimeIndex:
         """
 
         :param start: The starting time point
@@ -34,24 +34,24 @@ class Predicting:
             start=start, periods=periods, freq=self.__arguments.get('frequency'), inclusive='left')
 
     @staticmethod
-    def __measures(data: np.ndarray, times: pd.DatetimeIndex, samples: np.ndarray) -> pd.DataFrame:
+    def __measures(data: np.ndarray, times: pd.DatetimeIndex, p_distribution_samples: np.ndarray) -> pd.DataFrame:
         """
 
         :param data:
         :param times:
-        :param samples:
+        :param p_distribution_samples:
         :return:
         """
 
         return pd.DataFrame(data={
             'observation': data,
-            'lower_q': np.quantile(samples, q=0.25, axis=0),
-            'upper_q': np.quantile(samples, q=0.75, axis=0),
-            'median': np.quantile(samples, q=0.5, axis=0),
-            'lower_w': np.quantile(samples, q=0.10, axis=0),
-            'upper_w': np.quantile(samples, q=0.90, axis=0)}, index=times)
+            'lower_q': np.quantile(p_distribution_samples, q=0.25, axis=0),
+            'upper_q': np.quantile(p_distribution_samples, q=0.75, axis=0),
+            'median': np.quantile(p_distribution_samples, q=0.5, axis=0),
+            'lower_w': np.quantile(p_distribution_samples, q=0.10, axis=0),
+            'upper_w': np.quantile(p_distribution_samples, q=0.90, axis=0)}, index=times)
 
-    def exc(self, master: mr.Master, model: tfc.Sum, v_posterior_samples: collections.OrderedDict):
+    def exc(self, master: mr.Master, model: tfc.Sum, v_posterior_samples: collections.OrderedDict) -> pd.DataFrame:
         """
 
         :param master:
@@ -76,4 +76,4 @@ class Predicting:
             self.__arguments.get('n_samples')).numpy()
 
         # Hence
-        self.__measures(data=data, times=times, samples=p_distribution_samples)
+        return self.__measures(data=data, times=times, p_distribution_samples=p_distribution_samples)
