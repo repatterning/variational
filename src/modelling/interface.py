@@ -4,8 +4,9 @@ import dask
 import pandas as pd
 
 import src.elements.partitions as pr
+import src.elements.master as mr
 import src.modelling.data
-import src.modelling.splittings
+import src.modelling.split
 
 
 class Interface:
@@ -45,15 +46,15 @@ class Interface:
 
         # Delayed Functions
         __data = dask.delayed(src.modelling.data.Data(arguments=self.__arguments).exc)
-        __splittings = dask.delayed(src.modelling.splittings.Splittings(arguments=self.__arguments).exc)
+        __get_splits = dask.delayed(src.modelling.split.Split(arguments=self.__arguments).exc)
 
         # Compute
         computations = []
         for partition in partitions:
             listing = self.__get_listing(ts_id=partition.ts_id)
             data = __data(listing=listing)
-            splittings = __splittings(data=data)
-            computations.append(splittings)
+            master: mr.Master = __get_splits(data=data, partition=partition)
+            computations.append(master.training.shape[0])
         latest = dask.compute(computations, scheduler='threads')[0]
 
         logging.info(latest)
