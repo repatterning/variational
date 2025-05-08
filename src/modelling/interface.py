@@ -1,10 +1,11 @@
+"""Module interface.py"""
 import logging
-import dask
 
+import dask
 import pandas as pd
 
-import src.elements.partitions as pr
 import src.elements.master as mr
+import src.elements.partitions as pr
 import src.modelling.data
 import src.modelling.split
 
