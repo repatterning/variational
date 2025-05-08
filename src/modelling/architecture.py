@@ -1,4 +1,6 @@
+import collections
 import numpy as np
+import tensorflow.python.framework.ops as tfr
 import tensorflow_probability as tfp
 import tensorflow_probability.python.experimental.util as tfu
 import tf_keras
@@ -29,10 +31,12 @@ class Architecture:
 
     def __variational(self, model, _training: np.ndarray):
 
+        posterior: tfu.DeferredModule
         posterior = tfp.sts.build_factored_surrogate_posterior(
             model=model)
 
         # Evidence Lower Bound Loss Curve Data
+        elb: tfr.EagerTensor
         elb = tfp.vi.fit_surrogate_posterior(
             target_log_prob_fn=model.joint_distribution(observed_time_series=_training).log_prob,
             surrogate_posterior=posterior,
@@ -40,12 +44,14 @@ class Architecture:
             num_steps=self.__arguments.get('n_variational_steps'),
             jit_compile=True, seed=self.__arguments.get('seed'), name='fit_surrogate_posterior')
 
-        return posterior, elb
+        return posterior, elb.numpy()
 
     def exc(self, master: mr.Master):
 
         model = self.__model(_training=master.training['measure'].values)
 
         v_posterior: tfu.DeferredModule
+        v_elb: np.ndarray
         v_posterior, v_elb = self.__variational(model=model, _training=master.training['measure'].values)
-        v_posterior_samples = v_posterior.sample(self.__arguments.get('n_samples'))
+
+        v_posterior_samples: collections.OrderedDict = v_posterior.sample(self.__arguments.get('n_samples'))
