@@ -1,5 +1,4 @@
 """Module architecture.py"""
-import logging
 import collections
 import typing
 
@@ -12,6 +11,7 @@ import tensorflow_probability.python.sts.components as tfc
 import tf_keras
 
 import src.elements.master as mr
+import src.functions.streams
 import src.modelling.predicting
 
 
@@ -68,13 +68,14 @@ class Architecture:
             jit_compile=True,
             seed=self.__arguments.get('seed'),
             name='fit_surrogate_posterior')
+
         _elb = pd.DataFrame(data={
             'index': np.arange(elb.numpy().shape[0]),
             'evidence_lower_bound': elb.numpy()})
 
         return posterior, _elb
 
-    def exc(self, master: mr.Master):
+    def exc(self, master: mr.Master) -> typing.Tuple[pd.DataFrame, pd.DataFrame]:
         """
 
         :param master:
@@ -85,18 +86,13 @@ class Architecture:
         model: tfc.Sum = self.__model(_training=master.training['measure'].values)
 
         # Posteriors & Evidence Lower Bound
-        v_posterior: tfu.DeferredModule
-        v_elb: pd.DataFrame
         v_posterior, v_elb = self.__variational(model=model, _training=master.training['measure'].values)
 
         # Samples
         v_posterior_samples: collections.OrderedDict = v_posterior.sample(self.__arguments.get('n_samples'))
 
         # Hence
-        values = src.modelling.predicting.Predicting(arguments=self.__arguments).exc(
+        v_estimates = src.modelling.predicting.Predicting(arguments=self.__arguments).exc(
             master=master, model=model, v_posterior_samples=v_posterior_samples)
 
-        logging.info(v_elb)
-        logging.info(values)
-
-        return v_elb.shape
+        return v_elb, v_estimates
