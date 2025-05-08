@@ -44,12 +44,13 @@ class Predicting:
         """
 
         return pd.DataFrame(data={
+            'datetime': times,
             'observation': data,
             'lower_q': np.quantile(p_distribution_samples, q=0.25, axis=0),
             'upper_q': np.quantile(p_distribution_samples, q=0.75, axis=0),
             'median': np.quantile(p_distribution_samples, q=0.5, axis=0),
             'lower_w': np.quantile(p_distribution_samples, q=0.10, axis=0),
-            'upper_w': np.quantile(p_distribution_samples, q=0.90, axis=0)}, index=times)
+            'upper_w': np.quantile(p_distribution_samples, q=0.90, axis=0)})
 
     def exc(self, master: mr.Master, model: tfc.Sum, v_posterior_samples: collections.OrderedDict) -> pd.DataFrame:
         """
@@ -76,4 +77,7 @@ class Predicting:
             self.__arguments.get('n_samples')).numpy()
 
         # Hence
-        return self.__measures(data=data, times=times, p_distribution_samples=p_distribution_samples)
+        measures = self.__measures(data=data, times=times, p_distribution_samples=p_distribution_samples)
+        measures['milliseconds'] = measures['datetime'].astype(np.int64) / 1000
+
+        return measures
