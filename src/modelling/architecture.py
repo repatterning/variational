@@ -1,4 +1,5 @@
 """Module architecture.py"""
+import logging
 import collections
 import typing
 
@@ -92,3 +93,8 @@ class Architecture:
         # Hence
         values = src.modelling.predicting.Predicting(arguments=self.__arguments).exc(
             master=master, model=model, v_posterior_samples=v_posterior_samples)
+
+        logging.info(v_elb)
+        logging.info(values)
+
+        return v_elb.shape
