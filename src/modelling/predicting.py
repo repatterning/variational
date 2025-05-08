@@ -33,7 +33,8 @@ class Predicting:
         return pd.date_range(
             start=start, periods=periods, freq=self.__arguments.get('frequency'), inclusive='left')
 
-    def __measures(self, data: np.ndarray, times: pd.DatetimeIndex, samples: np.ndarray):
+    @staticmethod
+    def __measures(data: np.ndarray, times: pd.DatetimeIndex, samples: np.ndarray):
         """
 
         :param data:
@@ -73,3 +74,6 @@ class Predicting:
             parameter_samples=v_posterior_samples)
         p_distribution_samples: np.ndarray = p_distribution.distribution.sample(
             self.__arguments.get('n_samples')).numpy()
+
+        # Hence
+        self.__measures(data=data, times=times, samples=p_distribution_samples)
