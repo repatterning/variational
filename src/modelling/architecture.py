@@ -3,6 +3,7 @@ import collections
 import typing
 
 import numpy as np
+import pandas as pd
 import tensorflow.python.framework.ops as tfr
 import tensorflow_probability as tfp
 import tensorflow_probability.python.experimental.util as tfu
@@ -46,7 +47,7 @@ class Architecture:
 
         return model
 
-    def __variational(self, model, _training: np.ndarray) -> typing.Tuple[tfu.DeferredModule, np.ndarray]:
+    def __variational(self, model, _training: np.ndarray) -> typing.Tuple[tfu.DeferredModule, pd.DataFrame]:
         """
 
         :param model:
@@ -64,8 +65,11 @@ class Architecture:
             optimizer=tf_keras.optimizers.Adam(learning_rate=self.__arguments.get('learning_rate')),
             num_steps=self.__arguments.get('n_variational_steps'),
             jit_compile=True, seed=self.__arguments.get('seed'), name='fit_surrogate_posterior')
+        _elb = pd.DataFrame(data={
+            'index': np.arange(elb.numpy().shape[0]),
+            'evidence_lower_bound': elb.numpy()})
 
-        return posterior, elb.numpy()
+        return posterior, _elb
 
     def exc(self, master: mr.Master):
         """
@@ -79,12 +83,12 @@ class Architecture:
 
         # Posteriors & Evidence Lower Bound
         v_posterior: tfu.DeferredModule
-        v_elb: np.ndarray
+        v_elb: pd.DataFrame
         v_posterior, v_elb = self.__variational(model=model, _training=master.training['measure'].values)
 
         # Samples
         v_posterior_samples: collections.OrderedDict = v_posterior.sample(self.__arguments.get('n_samples'))
 
         # Hence
-        src.modelling.predicting.Predicting(arguments=self.__arguments).exc(
+        values = src.modelling.predicting.Predicting(arguments=self.__arguments).exc(
             master=master, model=model, v_posterior_samples=v_posterior_samples)
