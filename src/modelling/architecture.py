@@ -10,6 +10,7 @@ import tensorflow_probability.python.sts.components as tfc
 import tf_keras
 
 import src.elements.master as mr
+import src.modelling.predicting
 
 
 class Architecture:
@@ -83,3 +84,7 @@ class Architecture:
 
         # Samples
         v_posterior_samples: collections.OrderedDict = v_posterior.sample(self.__arguments.get('n_samples'))
+
+        # Hence
+        src.modelling.predicting.Predicting(arguments=self.__arguments).exc(
+            master=master, model=model, v_posterior_samples=v_posterior_samples)
