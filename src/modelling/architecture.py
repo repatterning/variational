@@ -2,6 +2,8 @@ import tensorflow_probability as tfp
 
 import numpy as np
 
+import src.elements.master as mr
+
 
 class Architecture:
 
@@ -23,3 +25,7 @@ class Architecture:
                             observed_time_series=_training)
 
         return model
+
+    def exc(self, master: mr.Master):
+
+        design = self.__design(_training=master.training['measure'].values)
