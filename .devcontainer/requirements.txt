@@ -1,3 +1,4 @@
+tensorflow-probability
 dask[complete]>2024
 dask-expr
 graphviz>=0.20.3
