@@ -65,7 +65,9 @@ class Architecture:
             surrogate_posterior=posterior,
             optimizer=tf_keras.optimizers.Adam(learning_rate=self.__arguments.get('learning_rate')),
             num_steps=self.__arguments.get('n_variational_steps'),
-            jit_compile=True, seed=self.__arguments.get('seed'), name='fit_surrogate_posterior')
+            jit_compile=True,
+            seed=self.__arguments.get('seed'),
+            name='fit_surrogate_posterior')
         _elb = pd.DataFrame(data={
             'index': np.arange(elb.numpy().shape[0]),
             'evidence_lower_bound': elb.numpy()})
