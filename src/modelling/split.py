@@ -4,8 +4,8 @@ import os
 import pandas as pd
 
 import config
-import src.elements.partitions as pr
 import src.elements.master as mr
+import src.elements.partitions as pr
 import src.functions.directories
 import src.functions.streams
 
