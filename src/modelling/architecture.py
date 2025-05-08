@@ -59,6 +59,11 @@ class Architecture:
         return posterior, elb.numpy()
 
     def exc(self, master: mr.Master):
+        """
+
+        :param master:
+        :return:
+        """
 
         model: tfc.Sum = self.__model(_training=master.training['measure'].values)
 
