@@ -9,6 +9,7 @@ import src.elements.partitions as pr
 import src.modelling.data
 import src.modelling.split
 import src.modelling.architecture
+import src.modelling.persist
 
 
 class Interface:
@@ -50,6 +51,7 @@ class Interface:
         __data = dask.delayed(src.modelling.data.Data(arguments=self.__arguments).exc)
         __get_splits = dask.delayed(src.modelling.split.Split(arguments=self.__arguments).exc)
         __architecture = dask.delayed(src.modelling.architecture.Architecture(arguments=self.__arguments).exc)
+        __persist = dask.delayed(src.modelling.persist.Persist().exc)
 
         # Compute
         computations = []
@@ -57,7 +59,8 @@ class Interface:
             listing = self.__get_listing(ts_id=partition.ts_id)
             data = __data(listing=listing)
             master: mr.Master = __get_splits(data=data, partition=partition)
-            message = __architecture(master=master)
+            inference = __architecture(master=master)
+            message = __persist(inference=inference, partition=partition)
             computations.append(message)
         latest = dask.compute(computations, scheduler='threads')[0]
 
