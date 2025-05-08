@@ -1,5 +1,7 @@
 import tensorflow_probability as tfp
 
+import tf_keras
+
 import numpy as np
 
 import src.elements.master as mr
@@ -11,7 +13,7 @@ class Architecture:
 
         self.__arguments = arguments
 
-    def __design(self, _training: np.ndarray):
+    def __model(self, _training: np.ndarray):
 
         month_of_year_effect = tfp.sts.Seasonal(
             num_seasons=self.__arguments.get('seasons').get('number_of'),
@@ -26,6 +28,19 @@ class Architecture:
 
         return model
 
+    def __variational(self, model, _training: np.ndarray):
+
+        posterior = tfp.sts.build_factored_surrogate_posterior(
+            model=model)
+
+        # Evidence Lower Bound Loss Curve Data
+        elb = tfp.vi.fit_surrogate_posterior(
+            target_log_prob_fn=model.joint_distribution(observed_time_series=_training).log_prob,
+            surrogate_posterior=posterior,
+            optimizer=tf_keras.optimizers.Adam(learning_rate=self.__arguments.get('learning_rate')),
+            num_steps=self.__arguments.get('n_variational_steps'),
+            jit_compile=True, seed=self.__arguments.get('seed'), name='fit_surrogate_posterior')
+
     def exc(self, master: mr.Master):
 
-        design = self.__design(_training=master.training['measure'].values)
+        model = self.__model(_training=master.training['measure'].values)
