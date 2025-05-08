@@ -16,15 +16,49 @@ class Predicting:
 
         self.__arguments = arguments
 
-    def exc(self, master: mr.Master, model: tfc.Sum, v_posterior_samples: collections.OrderedDict):
+    def __times(self, start: pd.Timestamp, periods: int):
 
+        return pd.date_range(
+            start=start, periods=periods, freq=self.__arguments.get('frequency'), inclusive='left')
+
+    def __measures(self, data: np.ndarray, times: pd.DatetimeIndex, samples: np.ndarray):
+        """
+        
+        :param data:
+        :param times:
+        :param samples:
+        :return:
+        """
+
+        return pd.DataFrame(data={
+            'observation': data,
+            'lower_q': np.quantile(samples, q=0.25, axis=0),
+            'upper_q': np.quantile(samples, q=0.75, axis=0),
+            'median': np.quantile(samples, q=0.5, axis=0),
+            'lower_w': np.quantile(samples, q=0.10, axis=0),
+            'upper_w': np.quantile(samples, q=0.90, axis=0)}, index=times)
+
+    def exc(self, master: mr.Master, model: tfc.Sum, v_posterior_samples: collections.OrderedDict):
+        """
+
+        :param master:
+        :param model:
+        :param v_posterior_samples:
+        :return:
+        """
 
         # The value of each future observation is unknown, hence np.nan
         data = pd.concat((master.training['measure'], master.testing['measure']), ignore_index=True).values
         data = np.concat((data, np.repeat(np.nan, self.__arguments.get('ahead'))))
 
-        distribution = tfp.sts.one_step_predictive(
+        # Times
+        times = self.__times(start=master.training['date'].min(), periods=data.shape[0])
+
+        # Distribution of predictions
+        p_distribution = tfp.sts.one_step_predictive(
             model=model,
             observed_time_series=data,
             parameter_samples=v_posterior_samples)
+        p_distribution_samples: np.ndarray = p_distribution.distribution.sample(
+            self.__arguments.get('n_samples')).numpy()
 
