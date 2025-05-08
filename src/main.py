@@ -21,7 +21,9 @@ def main():
     partitions, listings = src.assets.interface.Interface(
         service=service, s3_parameters=s3_parameters, arguments=arguments).exc()
     logger.info(partitions)
-    logger.info(listings)
+
+    src.modelling.interface.Interface(
+        listings=listings, arguments=arguments).exc(partitions=partitions)
 
     # Deleting __pycache__
     src.functions.cache.Cache().exc()
@@ -42,6 +44,7 @@ if __name__ == '__main__':
     import src.elements.s3_parameters as s3p
     import src.elements.service as sr
     import src.functions.cache
+    import src.modelling.interface
     import src.preface.interface
 
     connector: boto3.session.Session
