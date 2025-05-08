@@ -77,6 +77,6 @@ class Split:
 
         # Persist
         for instances, name in zip([frame, training, testing], ['data.csv', 'training.csv', 'testing.csv']):
-            self.__persist(blob=instances, pathstr=os.path.join(path, name))
+            self.__persist(blob=instances.drop(columns='date'), pathstr=os.path.join(path, name))
 
         return mr.Master(training=training, testing=testing)
