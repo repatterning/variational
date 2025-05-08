@@ -79,5 +79,6 @@ class Predicting:
         # Hence
         estimates = self.__estimates(data=data, times=times, p_distribution_samples=p_distribution_samples)
         estimates['milliseconds'] = estimates['datetime'].astype(np.int64) / 1000
+        estimates.drop(columns='datetime', inplace=True)
 
         return estimates
