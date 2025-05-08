@@ -41,6 +41,9 @@ class Architecture:
             num_steps=self.__arguments.get('n_variational_steps'),
             jit_compile=True, seed=self.__arguments.get('seed'), name='fit_surrogate_posterior')
 
+        return posterior, elb
+
     def exc(self, master: mr.Master):
 
         model = self.__model(_training=master.training['measure'].values)
+        v_posterior, v_elb = self.__variational(model=model, _training=master.training['measure'].values)
