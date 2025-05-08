@@ -1,19 +1,27 @@
+"""Module architecture.py"""
 import collections
 import typing
-import numpy as np
 
-import tensorflow_probability.python.sts.components as tfc
+import numpy as np
 import tensorflow.python.framework.ops as tfr
 import tensorflow_probability as tfp
 import tensorflow_probability.python.experimental.util as tfu
+import tensorflow_probability.python.sts.components as tfc
 import tf_keras
 
 import src.elements.master as mr
 
 
 class Architecture:
+    """
+    Architecture
+    """
 
     def __init__(self, arguments: dict):
+        """
+
+        :param arguments:
+        """
 
         self.__arguments = arguments
 
