@@ -11,6 +11,7 @@ import tensorflow_probability.python.sts.components as tfc
 import tf_keras
 
 import src.elements.master as mr
+import src.elements.inference as ifr
 import src.functions.streams
 import src.modelling.predicting
 
@@ -75,7 +76,7 @@ class Architecture:
 
         return posterior, _elb
 
-    def exc(self, master: mr.Master) -> typing.Tuple[pd.DataFrame, pd.DataFrame]:
+    def exc(self, master: mr.Master) -> ifr.Inference:
         """
 
         :param master:
@@ -95,4 +96,4 @@ class Architecture:
         v_estimates = src.modelling.predicting.Predicting(arguments=self.__arguments).exc(
             master=master, model=model, v_posterior_samples=v_posterior_samples)
 
-        return v_elb, v_estimates
+        return ifr.Inference(evidence_lower_bound=v_elb, estimates=v_estimates)
