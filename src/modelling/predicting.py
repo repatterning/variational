@@ -1,29 +1,41 @@
+"""Module predicting.py"""
 import collections
 
 import numpy as np
 import pandas as pd
 import tensorflow_probability as tfp
-
 import tensorflow_probability.python.sts.components as tfc
 
 import src.elements.master as mr
 
 
-
 class Predicting:
+    """
+    Predicting
+    """
 
     def __init__(self, arguments: dict):
+        """
+
+        :param arguments:
+        """
 
         self.__arguments = arguments
 
     def __times(self, start: pd.Timestamp, periods: int):
+        """
+
+        :param start: The starting time point
+        :param periods: The number of time points
+        :return:
+        """
 
         return pd.date_range(
             start=start, periods=periods, freq=self.__arguments.get('frequency'), inclusive='left')
 
     def __measures(self, data: np.ndarray, times: pd.DatetimeIndex, samples: np.ndarray):
         """
-        
+
         :param data:
         :param times:
         :param samples:
@@ -61,4 +73,3 @@ class Predicting:
             parameter_samples=v_posterior_samples)
         p_distribution_samples: np.ndarray = p_distribution.distribution.sample(
             self.__arguments.get('n_samples')).numpy()
-
