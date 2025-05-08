@@ -1,5 +1,7 @@
 import collections
 import numpy as np
+
+import tensorflow_probability.python.sts.components as tfc
 import tensorflow.python.framework.ops as tfr
 import tensorflow_probability as tfp
 import tensorflow_probability.python.experimental.util as tfu
@@ -14,7 +16,12 @@ class Architecture:
 
         self.__arguments = arguments
 
-    def __model(self, _training: np.ndarray):
+    def __model(self, _training: np.ndarray) -> tfc.Sum:
+        """
+
+        :param _training:
+        :return:
+        """
 
         month_of_year_effect = tfp.sts.Seasonal(
             num_seasons=self.__arguments.get('seasons').get('number_of'),
@@ -30,6 +37,12 @@ class Architecture:
         return model
 
     def __variational(self, model, _training: np.ndarray):
+        """
+        
+        :param model:
+        :param _training:
+        :return:
+        """
 
         posterior: tfu.DeferredModule
         posterior = tfp.sts.build_factored_surrogate_posterior(
