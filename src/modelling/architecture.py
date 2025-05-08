@@ -73,10 +73,13 @@ class Architecture:
         :return:
         """
 
+        # Model
         model: tfc.Sum = self.__model(_training=master.training['measure'].values)
 
+        # Posteriors & Evidence Lower Bound
         v_posterior: tfu.DeferredModule
         v_elb: np.ndarray
         v_posterior, v_elb = self.__variational(model=model, _training=master.training['measure'].values)
 
+        # Samples
         v_posterior_samples: collections.OrderedDict = v_posterior.sample(self.__arguments.get('n_samples'))
