@@ -34,7 +34,7 @@ class Predicting:
             start=start, periods=periods, freq=self.__arguments.get('frequency'), inclusive='left')
 
     @staticmethod
-    def __measures(data: np.ndarray, times: pd.DatetimeIndex, p_distribution_samples: np.ndarray) -> pd.DataFrame:
+    def __estimates(data: np.ndarray, times: pd.DatetimeIndex, p_distribution_samples: np.ndarray) -> pd.DataFrame:
         """
 
         :param data:
@@ -77,7 +77,7 @@ class Predicting:
             self.__arguments.get('n_samples')).numpy()
 
         # Hence
-        measures = self.__measures(data=data, times=times, p_distribution_samples=p_distribution_samples)
-        measures['milliseconds'] = measures['datetime'].astype(np.int64) / 1000
+        estimates = self.__estimates(data=data, times=times, p_distribution_samples=p_distribution_samples)
+        estimates['milliseconds'] = estimates['datetime'].astype(np.int64) / 1000
 
-        return measures
+        return estimates
