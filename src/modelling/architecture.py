@@ -47,3 +47,4 @@ class Architecture:
 
         model = self.__model(_training=master.training['measure'].values)
         v_posterior, v_elb = self.__variational(model=model, _training=master.training['measure'].values)
+        v_posterior_samples = v_posterior.sample(self.__arguments.get('n_samples'))
