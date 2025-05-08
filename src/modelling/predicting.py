@@ -34,7 +34,7 @@ class Predicting:
             start=start, periods=periods, freq=self.__arguments.get('frequency'), inclusive='left')
 
     @staticmethod
-    def __measures(data: np.ndarray, times: pd.DatetimeIndex, samples: np.ndarray):
+    def __measures(data: np.ndarray, times: pd.DatetimeIndex, samples: np.ndarray) -> pd.DataFrame:
         """
 
         :param data:
