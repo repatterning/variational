@@ -3,7 +3,6 @@ import datetime
 import logging
 import os
 import sys
-import tensorflow as tf
 
 import boto3
 
@@ -36,9 +35,6 @@ if __name__ == '__main__':
     sys.path.append(os.path.join(root, 'src'))
 
     os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
-
-    tf.config.experimental.set_visible_devices(
-        tf.config.list_physical_devices('CPU'), 'CPU')
 
     # Logging
     logging.basicConfig(level=logging.INFO,
