@@ -30,9 +30,16 @@ class Config:
         '''
         self.s3_parameters_key = 's3_parameters.yaml'
         self.arguments_key = 'artefacts' + '/' + 'architecture' + '/' + 'variational' + '/' + 'arguments.json'
+        self.metadata = 'artefacts/metadata.json'
 
         '''
         Local Paths
         '''
+        sections = ['assets', 'variational', self.stamp]
         self.warehouse: str = os.path.join(os.getcwd(), 'warehouse')
-        self.assets_ = os.path.join(self.warehouse, 'assets', 'variational', self.stamp)
+        self.assets_ = os.path.join(self.warehouse, *sections)
+
+        '''
+        Cloud
+        '''
+        self.prefix = '/'.join(sections)
