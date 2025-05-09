@@ -36,7 +36,6 @@ class Interface:
 
         # Metadata dictionary
         self.__metadata = src.transfer.metadata.Metadata(connector=connector).exc(architecture='variational')
-        logging.info(self.__metadata)
 
     def __set_metadata(self, frame: pd.DataFrame) -> pd.DataFrame:
         """
