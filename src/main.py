@@ -21,8 +21,6 @@ def main():
     logger.info('CPU: %s', tf.config.list_physical_devices('CPU'))
     logger.info('GPU: %s', tf.config.list_physical_devices('GPU'))
 
-
-    '''
     # partitions: catchment & time series codes, listings: list of files and supplementary data
     partitions, listings = src.assets.interface.Interface(
         service=service, s3_parameters=s3_parameters, arguments=arguments).exc()
@@ -31,11 +29,10 @@ def main():
     # Modelling
     src.modelling.interface.Interface(
         listings=listings, arguments=arguments).exc(partitions=partitions)
-    '''
+
 
     src.transfer.interface.Interface(
         connector=connector, service=service, s3_parameters=s3_parameters).exc()
-
 
     # Deleting __pycache__
     src.functions.cache.Cache().exc()
