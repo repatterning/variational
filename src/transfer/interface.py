@@ -1,7 +1,5 @@
 """Module interface.py"""
-import json
 import logging
-import os
 
 import boto3
 import pandas as pd
@@ -10,9 +8,9 @@ import config
 import src.elements.s3_parameters as s3p
 import src.elements.service as sr
 import src.s3.ingress
+import src.transfer.cloud
 import src.transfer.dictionary
 import src.transfer.metadata
-import src.transfer.cloud
 
 
 class Interface:
