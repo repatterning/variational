@@ -55,7 +55,7 @@ class Interface:
 
         # Compute
         computations = []
-        for partition in partitions[:2]:
+        for partition in partitions[:16]:
             listing = self.__get_listing(ts_id=partition.ts_id)
             data = __data(listing=listing)
             master: mr.Master = __get_splits(data=data, partition=partition)
