@@ -1,17 +1,18 @@
 """Module architecture.py"""
 import collections
+import logging
 import typing
 
 import numpy as np
 import pandas as pd
-import tensorflow.python.framework.ops as tfr
+import tensorflow as tf
 import tensorflow_probability as tfp
 import tensorflow_probability.python.experimental.util as tfu
 import tensorflow_probability.python.sts.components as tfc
 import tf_keras
 
-import src.elements.master as mr
 import src.elements.inference as ifr
+import src.elements.master as mr
 import src.functions.streams
 import src.modelling.predicting
 
@@ -61,7 +62,7 @@ class Architecture:
             model=model)
 
         # Evidence Lower Bound Loss Curve Data
-        elb: tfr.EagerTensor = tfp.vi.fit_surrogate_posterior(
+        elb: tf.Tensor = tfp.vi.fit_surrogate_posterior(
             target_log_prob_fn=model.joint_distribution(observed_time_series=_training).log_prob,
             surrogate_posterior=posterior,
             optimizer=tf_keras.optimizers.Adam(learning_rate=self.__arguments.get('learning_rate')),
@@ -69,6 +70,7 @@ class Architecture:
             jit_compile=True,
             seed=self.__arguments.get('seed'),
             name='fit_surrogate_posterior')
+        logging.info('Evidence Lower Bound: %s', type(elb))
 
         _elb = pd.DataFrame(data={
             'index': np.arange(elb.numpy().shape[0]),
