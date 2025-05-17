@@ -19,7 +19,7 @@ class Interface:
 
     def __init__(self):
         """
-
+        Constructor
         """
 
         self.__configurations = config.Config()
@@ -27,6 +27,7 @@ class Interface:
     def __get_arguments(self, connector: boto3.session.Session) -> dict:
         """
 
+        :param connector:
         :return:
         """
 
