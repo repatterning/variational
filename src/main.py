@@ -70,7 +70,7 @@ if __name__ == '__main__':
     s3_parameters: s3p.S3Parameters
     service: sr.Service
     arguments: dict
-    connector, s3_parameters, service, arguments = src.preface.interface.Interface().exc()
+    connector, s3_parameters, service, arguments = src.preface.interface.Interface().exc(codes=args.codes)
 
     # Devices
     gpu = tf.config.list_physical_devices('GPU')
