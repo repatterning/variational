@@ -38,7 +38,7 @@ class Interface:
 
     def exc(self, codes: list[int] | None) -> typing.Tuple[boto3.session.Session, s3p.S3Parameters, sr.Service, dict]:
         """
-        
+
         :param codes:
         :return:
         """
