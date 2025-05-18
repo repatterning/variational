@@ -51,7 +51,7 @@ class Interface:
         arguments: dict = self.__get_arguments(connector=connector)
 
         if codes is not None:
-            arguments['excerpt'] = codes
+            arguments['series']['excerpt'] = codes
 
         src.preface.setup.Setup(service=service, s3_parameters=s3_parameters).exc()
 
