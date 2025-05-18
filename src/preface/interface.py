@@ -19,7 +19,7 @@ class Interface:
 
     def __init__(self):
         """
-
+        Constructor
         """
 
         self.__configurations = config.Config()
@@ -27,6 +27,7 @@ class Interface:
     def __get_arguments(self, connector: boto3.session.Session) -> dict:
         """
 
+        :param connector:
         :return:
         """
 
@@ -36,9 +37,10 @@ class Interface:
 
         return arguments
 
-    def exc(self) -> typing.Tuple[boto3.session.Session, s3p.S3Parameters, sr.Service, dict]:
+    def exc(self, codes: list[int] | None) -> typing.Tuple[boto3.session.Session, s3p.S3Parameters, sr.Service, dict]:
         """
 
+        :param codes:
         :return:
         """
 
@@ -47,6 +49,9 @@ class Interface:
         service: sr.Service = src.functions.service.Service(
             connector=connector, region_name=s3_parameters.region_name).exc()
         arguments: dict = self.__get_arguments(connector=connector)
+
+        if codes is not None:
+            arguments['series']['excerpt'] = codes
 
         src.preface.setup.Setup(service=service, s3_parameters=s3_parameters).exc()
 

@@ -1,4 +1,5 @@
 """Module main.py"""
+import argparse
 import datetime
 import logging
 import os
@@ -57,12 +58,19 @@ if __name__ == '__main__':
     import src.modelling.interface
     import src.preface.interface
     import src.transfer.interface
+    import src.specific
+
+    specific = src.specific.Specific()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--codes', type=specific.codes,
+                        help='Expects a string of one or more comma separated gauge time series codes.')
+    args = parser.parse_args()
 
     connector: boto3.session.Session
     s3_parameters: s3p.S3Parameters
     service: sr.Service
     arguments: dict
-    connector, s3_parameters, service, arguments = src.preface.interface.Interface().exc()
+    connector, s3_parameters, service, arguments = src.preface.interface.Interface().exc(codes=args.codes)
 
     # Devices
     gpu = tf.config.list_physical_devices('GPU')
