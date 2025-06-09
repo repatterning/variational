@@ -1,8 +1,8 @@
 <br>
 
-Variational
+### River level prediction via Bayesian Structural Time Series + Variational Inference
 
-The project's prediction models are Bayesian Structural Time Series (STS) models.  A Bayesian Structural Time Series algorithm is a state space algorithm, in brief
+A Bayesian Structural Time Series (STS) algorithm is a state space algorithm, in brief
 
 
 $$y_{t} = \pmb{x}^{T}\_{t}\pmb{\beta}\_{t} + \epsilon_{t} \qquad \qquad \qquad 1$$
