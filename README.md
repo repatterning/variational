@@ -9,9 +9,9 @@ $$y_{t} = \pmb{x}^{T}\_{t}\pmb{\beta}\_{t} + \epsilon_{t}$$
 
 $$\pmb{\beta}\_{t} = \pmb{F}\_{t}\pmb{\beta}\_{t - 1} + \pmb{\varsigma}_{t}$$
 
-$$\epsilon_{t} \sim \mathcal{N}\bigl(0, \: \sigma^{2}_{t}  \bigr)$$
+$$\epsilon_{t} \sim \mathcal{N}\bigl(0, \\: \sigma^{2}_{t}  \bigr)$$
 
-$$\pmb{\varsigma}\_{t} \sim \mathcal{N}\bigl(\pmb{0}, \pmb{\mathcal{Z}}\_{t}\bigr)$$
+$$\pmb{\varsigma}\_{t} \sim \mathcal{N}\bigl(\boldsymbol{0}, \\: \pmb{\mathcal{Z}}\_{t}\bigr)$$
 
 whereby
 
