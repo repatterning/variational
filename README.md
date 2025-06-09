@@ -9,11 +9,11 @@ $$y_{t} = \pmb{x}^{T}\_{t}\pmb{\beta}\_{t} + \epsilon_{t}$$
 
 
 \begin{equation}
-\pmb{\beta}_{t} = \pmb{F}_{t}\pmb{\beta}_{t - 1} + \pmb{\varsigma}_{t}
+\pmb{\beta}\_{t} = \pmb{F}\_{t}\pmb{\beta}\_{t - 1} + \pmb{\varsigma}_{t}
 \label{eq:0002}
 \end{equation}
 
-$$\epsilon_{t} \sim \mathcal{N}\bigl(0, \quad \sigma^{2}_{t}  \bigr)$$
+$$\epsilon_{t} \sim \mathcal{N}\bigl(0, \: \sigma^{2}_{t}  \bigr)$$
 
 $$\mathbf{\varsigma}\_{t} \sim \mathcal{N}\bigl(\mathbf{0}, \mathbf{\mathcal{Z}}\_{t}\bigr)$$
 
