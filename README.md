@@ -15,7 +15,7 @@ $$y_{t} = \mathbf{x}^{T}_{t}\pmb{\beta}_{t} + \epsilon_{t}$$
 
 $$\epsilon_{t} \sim \mathcal{N}\bigl(0, \sigma^{2}_{t}  \bigr)$$
 
-$$\mathbf{\varsigma}_{t} \sim \mathcal{N}\bigl(\mathbf{0}, \mathbf{\mathcal{Z}}_{t}\bigr)$$
+$$\mathbf{\varsigma}\_{t} \sim \mathcal{N}\bigl(\mathbf{0}, \mathbf{\mathcal{Z}}\_{t}\bigr)$$
 
 whereby
 
