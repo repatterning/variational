@@ -2,6 +2,8 @@
 
 ### River level prediction via Bayesian Structural Time Series + Variational Inference
 
+<br>
+
 A Bayesian Structural Time Series (STS) algorithm is a state space algorithm, in brief
 
 
@@ -15,7 +17,7 @@ $$\pmb{\varsigma}\_{t} \sim \mathcal{N}\bigl(\mathbf{0}, \: \pmb{\mathcal{Z}}\_{
 
 whereby
 
-&nbsp; | &nbsp;
+&nbsp; | description
 :--- | :---
 $y_{t}$ | $1 \times 1$ scalar.  Herein, it is a gauge's river level measure at time point $t$.
 $\pmb{x}_{t}$ | $p \times 1$.  A design vector.
